@@ -1,0 +1,13 @@
+.data
+msg: .asciiz "Ola Mundo \n"
+
+
+.text
+main:
+	li $v0,4 #comando de impressão de string na tela
+	la $a0, msg #carregar endereço
+	syscall # efetua a chamada ao sistema
+
+	li $v0, 10 # return 0
+	syscall 
+

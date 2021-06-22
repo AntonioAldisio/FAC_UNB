@@ -1,0 +1,91 @@
+divfac:
+    li $t3, 1
+    li $t4, 1
+
+    blt	$a0, $zero, NegativoA
+
+Volta:
+    blt $a1, $zero, NegativoB
+    j Inicio
+
+NegativoA:
+    li $t3,0
+    subu $a0,$zero,$a0
+    j Volta
+
+NegativoB:
+    li $t4, 0
+    subu $a1,$zero,$a1
+    j Inicio
+
+
+Inicio:
+    move $t0, $a2      
+    move $t1, $a3       
+    addi $t6, $zero, 0   
+    move $a2, $a0        
+    move $a3, $zero        
+
+Loop:  
+    addi $t6, $t6, 1     
+ # (1) 
+    slt $t7, $a2, $zero     
+    sll $a2, $a2, 1      
+    sll $a3, $a3, 1     
+    or  $a3, $a3, $t7     
+
+ # (2) 
+    subu $a3, $a3, $a1   
+
+ # (3) 
+    slt $t7, $a3, $zero    
+    beq $t7, $zero, Positive   
+
+ # (3b) 
+    addu $a3, $a3, $a1    
+    j Exit             
+
+Positive:
+
+    ori $a2, $a2, 1      
+
+Exit:
+
+    slti $t7, $t6, 32    
+    bne  $t7, $zero, Loop  
+
+    bne $t3, $t4, Ajuste # Sinais diferentes
+    beq $t4,$t3, AjusteB
+    
+    mtlo $a2
+    mthi $a3
+
+    j $ra
+
+Ajuste:
+    beq $t4,$zero,Aux2 # Divisor for negativo
+    
+    sub $a2,$zero,$a2
+    sub $a3,$zero,$a3
+    mtlo $a2
+    mthi $a3
+    j $ra
+    
+Aux:
+    sub $a3,$zero,$a3
+    mtlo $a2
+    mthi $a3
+    j $ra
+
+AjusteB:
+    beq $t4,$zero,Aux # Divisor for negativo
+
+    mtlo $a2
+    mthi $a3
+    j $ra
+
+Aux2:
+    sub $a2,$zero,$a2
+    mtlo $a2
+    mthi $a3
+    j $ra

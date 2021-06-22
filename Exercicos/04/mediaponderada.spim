@@ -1,0 +1,49 @@
+.data
+
+espaco: .asciiz "\n"
+
+
+.text
+
+main:  
+    
+    li $v0,5
+    syscall
+    move $a0, $v0 #Quantidade
+
+
+    jal mediaponderada
+
+
+    #### Pula linha ######
+    li $v0,4 #comando de impressão de string na tela
+	la $a0, espaco #carregar endereço
+	syscall # efetua a chamada ao sistema
+
+	li $v0, 10 # return 0
+	syscall 
+
+mediaponderada:
+
+    li $v0,7
+    syscall
+    mov.d $f2, $f0 #Peso Os registradores tem que ser par
+
+    li $v0,7
+    syscall
+    mov.d $f4, $f0 #Entrada
+    
+    mul.d $f6, $f2,$f4 # Multiplicação f3 = Peso * entrada
+
+    add.d $f8,$f8, $f2  #Dividendo
+    add.d $f10, $f10, $f6 #Divisor
+
+    sub $a0,$a0,1 # i--
+    bnez $a0, mediaponderada	
+
+    div.d $f12, $f10, $f8			# f6 = f4/f5
+    
+    li $v0,3 
+    syscall
+    
+    j $ra

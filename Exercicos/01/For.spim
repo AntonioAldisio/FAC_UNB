@@ -1,0 +1,29 @@
+.text
+
+main:  
+    li $v0,5 # pegando valor do terminal
+    syscall
+    move $t0, $v0 #movendo a entrada para capacidade
+
+    li $t1,0
+
+loop:
+    bgt $t1,$t0,exit
+    
+    li $v0,5 # pegando valor do terminal
+    syscall
+    move $t5, $v0 #movendo a entrada para capacidade
+    
+    addi $t0, $t0, 1 
+    add $t5,$t0,$t5
+
+    j loop
+
+exit:
+    
+    li $v0,1 #printando a saida
+    move $a0, $t5
+    syscall
+
+    li $v10,0
+    syscall

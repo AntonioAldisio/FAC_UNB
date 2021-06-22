@@ -1,0 +1,42 @@
+.data
+msg: .asciiz "overflow \n"
+
+
+.text
+overflow:
+	li $v0,4 #comando de impressão de string na tela
+	la $a0, msg #carregar endereço
+	syscall # efetua a chamada ao sistema
+
+	li $v0, 10 # return 0
+	syscall 
+
+main:  
+    li $v0,5
+    syscall
+    move $t4, $v0 # Entrada do tipo de sinal
+
+    li $v0,5
+    syscall
+    move $s0, $v0 # Entrada 1
+    
+    li $v0,5
+    syscall
+    move $s1, $v0 # Entrada 2
+     
+    add $s3, $s1,$s2 # Soma da entrada
+
+    addu $s2 , $s0, $s1
+
+    xor $t0, $s0, $s2   # $t0 = op1 ^ result
+    xor $t1, $s1, $s2   # $t1 = op2 ^ result
+    and $t0, $t0, $t1   # $t0 = (op1 ^ result) & (op2 ^ result)
+    bltz $t0, overflow
+
+    li $v0,1
+    move $a0, $s2
+    syscall
+
+	li $v0, 10 # return 0
+	syscall 
+    
